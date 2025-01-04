@@ -1,5 +1,6 @@
-import { mealRouter } from "~/server/api/routers/meal";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
+import { mealRouter } from "~/server/api/routers/meal";
+import { calendarRouter } from "~/server/api/routers/calender";
 
 /**
  * This is the primary router for your server.
@@ -8,6 +9,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   meal: mealRouter,
+  calendar: calendarRouter,
 });
 
 // export type definition of API
