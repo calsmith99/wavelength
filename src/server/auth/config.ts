@@ -14,7 +14,6 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      accessToken?: string; // Add accessToken here
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
@@ -38,7 +37,8 @@ export const authConfig = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
-          scope: "https://www.googleapis.com/auth/calendar.readonly email profile",
+          scope:
+            "https://www.googleapis.com/auth/calendar.events openid email profile",
         },
       },
     }),
