@@ -5,12 +5,13 @@ interface AlbumProps {
     name: String;
     artist: String;
     image?: String;
+    highlight: Boolean;
   }
 
-export function AlbumTile( {name, artist, image} : AlbumProps) {
+export function AlbumTile( {name, artist, image, highlight} : AlbumProps) {
 
     return (
-        <div className="flex flex-col justify-between rounded-xl p-4 aspect-square w-full"
+        <div className={`flex flex-col justify-between rounded-xl p-4 aspect-square w-full ${highlight && 'border-solid border-2'}`}
             style={{
                 backgroundImage: `url(${image})`,
                 backgroundPosition: 'center',

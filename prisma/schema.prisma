@@ -14,20 +14,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Meal {
-    id        Int      @id @default(autoincrement())
-    name      String
-    recipeLink String?
-    days       Int
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
-
-    @@index([name])
-}
-
 // Necessary for Next auth
 model Account {
     id                       String  @id @default(cuid())
@@ -65,7 +51,13 @@ model User {
     lastFMName    String?
     accounts      Account[]
     sessions      Session[]
-    meals         Meal[]
+    groups        Group[]
+}
+
+model Group {
+    id            String    @id @default(cuid())
+    name          String
+    users         User[]
 }
 
 model VerificationToken {

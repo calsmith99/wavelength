@@ -1,4 +1,4 @@
-import { LastFMForm } from "~/app/_components/forms/LastFMForm";
+import { LastFMForm } from "~/app/_components/Forms/LastFMForm";
 
 export default function SettingsPage() {
   return (
