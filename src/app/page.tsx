@@ -10,10 +10,6 @@ import { signIn } from "next-auth/react";
 export default async function Home() {
   const session = await auth();
 
-  if (session?.user) {
-    void api.meal.getAll.prefetch();
-  }
-
   return (
     <HydrateClient>
         <main className="flex min-h-screen flex-col items-center p-6 bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
@@ -43,7 +39,7 @@ export default async function Home() {
         }
           <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
             <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-              Meal <span className="text-[hsl(280,100%,70%)]">Planner</span>
+              Social <span className="text-[hsl(280,100%,70%)]">Scrobbler</span>
             </h1>
 
             {!session &&
@@ -56,7 +52,7 @@ export default async function Home() {
                   </Link>
                 </div>
               }
-            {session?.user && <Dash />}
+            {session?.user && <Dash session={session} />}
           </div>
         </main>
     </HydrateClient>

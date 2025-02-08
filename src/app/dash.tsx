@@ -1,20 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { Session } from "next-auth";
+import { Chart } from "./_components/Charts/Chart";
 
-import { api } from "~/trpc/react";
-import { AllMeals } from "./_components/meals";
-import { MealForm } from "./_components/meal";
-import { WeekCalendar } from "./_components/calendar-week";
-import { CalenderEvent } from "./_components/CalenderEvent";
+interface DashProps {
+  session: Session;
+}
 
-export function Dash() {
+export function Dash({ session }: DashProps) {
   return (
     <>
-      {/* <WeekCalendar /> */}
-      <AllMeals />
-      <CalenderEvent />
-      <MealForm />
+      {session.user.lastFMName && <Chart username={session.user.lastFMName} />}
     </>
   );
 }
