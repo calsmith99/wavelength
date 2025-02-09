@@ -133,4 +133,102 @@ export const lastFmRouter = createTRPCRouter({
     // Return the sorted merged albums
     return mergedAlbums;
   }),
+  getTopTracks: protectedProcedure
+  .input(z.object({ username: z.string() }))
+  .query(async ({ input }) => {
+    const { username } = input;
+    const api_key = process.env.AUTH_LAST_FM_KEY;
+
+    try {
+      // Step 1: Fetch the top tracks for the user
+      const topTracksRes = await fetch(
+        `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${username}&api_key=${api_key}&format=json`,
+      );
+      const topTracksData = (await topTracksRes.json()) as { toptracks: { track: any[] } };
+
+      // Step 2: Return the top tracks data
+      return topTracksData.toptracks;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }),
+  getMergedTopTracks: protectedProcedure
+  .input(z.object({ groupId: z.string() }))
+  .query(async ({ ctx, input }) => {
+    const group = await ctx.db.group.findUnique({
+      where: { id: input.groupId },
+      include: { users: true },
+    });
+
+    if (!group) return null;
+
+    const api_key = process.env.AUTH_LAST_FM_KEY;
+
+    // Fetch top tracks for all users in the group
+    const topTracks = await Promise.all(
+      group.users.map(async (user) => {
+        if (user.lastFMName) {
+          // Step 1: Fetch the top tracks for the user
+          const topTracksRes = await fetch(
+            `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${user.lastFMName}&api_key=${api_key}&period=7day&format=json`,
+          );
+          const topTracksData = (await topTracksRes.json()) as {
+            toptracks: { track: any[] };
+          };
+
+          // Step 2: Map the tracks and add the user's name
+          const tracksWithUser = topTracksData.toptracks.track.map((track) => ({
+            ...track,
+            playcount: parseInt(track.playcount), // Convert playcount to a number
+            users: [user.name], // Add the user's name
+          }));
+
+          return tracksWithUser;
+        }
+        return []; // Return an empty array if the user doesn't have a Last.fm name
+      }),
+    );
+
+    // Merge the tracks
+    const merged: Record<string, any> = {};
+    topTracks.flat().forEach((track) => {
+      const key = `${track.name}-${track.artist.name}`; // Use track name and artist as the key
+      if (merged[key]) {
+        merged[key].playcount += track.playcount; // Add playcount as a number
+        merged[key].users.push(...track.users); // Add the user to the track
+      } else {
+        merged[key] = {
+          ...track,
+          users: [...track.users], // Initialize the users array
+        };
+      }
+    });
+
+    // Convert the merged object to an array and sort by playcount in descending order
+    const mergedTracks = Object.values(merged).sort((a, b) => b.playcount - a.playcount);
+
+    // Return the sorted merged tracks
+    return mergedTracks;
+  }),
+  getAlbums: protectedProcedure
+  .input(z.object({ album: z.string() }))
+  .query(async ({ input }) => {
+    const { album } = input;
+    const api_key = process.env.AUTH_LAST_FM_KEY;
+
+    try {
+      // Step 1: Fetch the top tracks for the user
+      const albumsRes = await fetch(
+        `https://ws.audioscrobbler.com/2.0/?method=album.search&album=${album}&api_key=${api_key}&format=json`,
+      );
+      const albums = (await albumsRes.json()) as { albums: { album: any[] } };
+
+      // Step 2: Return the top tracks data
+      return albums;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }),
 });

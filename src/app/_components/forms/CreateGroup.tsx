@@ -13,21 +13,22 @@ export function CreateGroupForm() {
         },
       });
   return (
-    <div className="w-full max-w-xs">
-      <h1 className="text-2xl font-bold text-center">New Group</h1>
+    <div className="w-full flex flex-col items-center gap-4">
       <form
         onSubmit={(e) => {
           e.preventDefault();
           createGroup.mutate({ name: groupName });
         }}
-    >
+        className="flex flex-row m-sm align-center gap-4"
+      >
+        <div className="text-2xl font-bold align-center px-4 py-3 ">New Group</div>
         <input
         className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
         type="text"
         value={groupName}
         onChange={(e) => setGroupName(e.target.value)}
         />
-        <button type="submit">Create</button>
+        <button type="submit" className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20">Create</button>
       </form>
     </div>
   );

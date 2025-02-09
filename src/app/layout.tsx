@@ -20,7 +20,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body>
+      <body className="flex min-h-screen flex-col items-center p-6 bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white w-full">
         <SessionProvider session={session}> {/* Wrap with SessionProvider */}
           <TRPCReactProvider>{children}</TRPCReactProvider>
         </SessionProvider>

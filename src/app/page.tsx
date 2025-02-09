@@ -12,21 +12,23 @@ export default async function Home() {
 
   return (
     <HydrateClient>
-        <main className="flex min-h-screen flex-col items-center p-6 bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+        <div className="w-full">
         {session?.user &&
-         <div className="flex flex-col items-end self-end justify-end gap-4">
+         <div className="flex flex-row justify-between gap-4">
+          <div className="flex flex-col items-start">
             <p className="text-center text-2xl text-white">
               {session && <span>Logged in as {session.user?.name}</span>}
             </p>
             <p className="text-center text-2xl text-white">
               {session && <span>Last.FM: {session.user?.lastFMName}</span>}
             </p>
-            <div className="flex flex-row">
+            </div>
+            <div className="flex flex-row items-center">
               <Link
-                href={session ? "/api/auth/signout" : "/api/auth/signin"}
+                href={"/groups"}
                 className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
               >
-                {session ? "Sign out" : "Sign in"}
+                Your Groups
               </Link>
               <Link
                 href={"/user/settings"}
@@ -34,12 +36,18 @@ export default async function Home() {
               >
                 Settings
               </Link>
+              <Link
+                href={session ? "/api/auth/signout" : "/api/auth/signin"}
+                className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
+              >
+                {session ? "Sign out" : "Sign in"}
+              </Link>
             </div>
           </div>
         }
           <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
             <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-              Social <span className="text-[hsl(280,100%,70%)]">Scrobbler</span>
+              Wave<span className="text-[hsl(280,100%,70%)]">Length</span>
             </h1>
 
             {!session &&
@@ -54,7 +62,7 @@ export default async function Home() {
               }
             {session?.user && <Dash session={session} />}
           </div>
-        </main>
+        </div>
     </HydrateClient>
   );
 }
