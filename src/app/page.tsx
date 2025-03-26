@@ -45,7 +45,7 @@ export default async function Home() {
             </div>
           </div>
         }
-          <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
+          <div className="w-full flex flex-col items-center justify-center gap-12 px-4 py-16">
             <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
               Wave<span className="text-[hsl(280,100%,70%)]">Length</span>
             </h1>
